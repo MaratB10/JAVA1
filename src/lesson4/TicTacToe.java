@@ -72,18 +72,58 @@ public class TicTacToe {
     }
 
     private static boolean checkWin(char symbol) {
-        if (map[0][0] == symbol && map[0][1] == symbol && map[0][2] == symbol) return true;
-        if (map[1][0] == symbol && map[1][1] == symbol && map[1][2] == symbol) return true;
-        if (map[2][0] == symbol && map[2][1] == symbol && map[2][2] == symbol) return true;
 
-        if (map[0][0] == symbol && map[1][0] == symbol && map[2][0] == symbol) return true;
-        if (map[0][1] == symbol && map[1][1] == symbol && map[2][1] == symbol) return true;
-        if (map[0][2] == symbol && map[1][2] == symbol && map[2][2] == symbol) return true;
+        int mainDiagonal = 0;
+        int sideDiagonal = 0;
 
-        if (map[0][0] == symbol && map[1][1] == symbol && map[2][2] == symbol) return true;
-        if (map[0][2] == symbol && map[1][1] == symbol && map[2][0] == symbol) return true;
+        for (int i = 0; i < map.length; i ++) {
+            if (map[i][i] == symbol) {
+                mainDiagonal++;
+            } else {
+                mainDiagonal = 0;
+            }
+            if (map[i][map.length - 1 - i] == symbol) {
+                sideDiagonal++;
+            } else {
+                sideDiagonal = 0;
+            }
+
+            int horizontalLine = 0;
+            int verticalLine = 0;
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == symbol) {
+                    horizontalLine++;
+                } else {
+                    horizontalLine = 0;
+                }
+                if (map[j][i] == symbol) {
+                    verticalLine++;
+                } else {
+                    verticalLine = 0;
+                }
+            }
+            if (verticalLine == DOTS_TO_WIN || horizontalLine == DOTS_TO_WIN ||
+                    mainDiagonal == DOTS_TO_WIN || sideDiagonal == DOTS_TO_WIN) {
+                return true;
+            }
+
+        }
 
         return false;
+
+
+//        if (map[0][0] == symbol && map[0][1] == symbol && map[0][2] == symbol) return true;
+//        if (map[1][0] == symbol && map[1][1] == symbol && map[1][2] == symbol) return true;
+//        if (map[2][0] == symbol && map[2][1] == symbol && map[2][2] == symbol) return true;
+//
+//        if (map[0][0] == symbol && map[1][0] == symbol && map[2][0] == symbol) return true;
+//        if (map[0][1] == symbol && map[1][1] == symbol && map[2][1] == symbol) return true;
+//        if (map[0][2] == symbol && map[1][2] == symbol && map[2][2] == symbol) return true;
+//
+//        if (map[0][0] == symbol && map[1][1] == symbol && map[2][2] == symbol) return true;
+//        if (map[0][2] == symbol && map[1][1] == symbol && map[2][0] == symbol) return true;
+
+     //   return false;
     }
 
     private static void aiTurn() {
