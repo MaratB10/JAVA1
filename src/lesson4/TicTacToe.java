@@ -12,8 +12,8 @@ public class TicTacToe {
     private  static  final char DONT_X = 'X';
     private  static  final char DONT_O = 'O';
 
-    private static final int SIZE = 3; // размер поля
-    private static final int DOTS_TO_WIN = 3; // кол-во значений идущих подряд для победы
+    private static final int SIZE = 5; // размер поля
+    private static final int DOTS_TO_WIN = 4; // кол-во значений идущих подряд для победы
 
     private static final char[][] map = new char[SIZE][SIZE]; //Поле игры
     private static final Scanner scanner = new Scanner(System.in);
@@ -73,20 +73,29 @@ public class TicTacToe {
 
     private static boolean checkWin(char symbol) {
 
-        int mainDiagonal = 0;
-        int sideDiagonal = 0;
+
+        for (int i = -map.length/2; i<= map.length/2; i++){
+            int mainDiagonal = 0;
+            int sideDiagonal = 0;
+
+            for (int j = 0; j < map.length; j++) {
+                if (i+j >= 0 && i+j < map.length && map[j][j+i] == symbol) {
+                    mainDiagonal++;
+                } else if (i+j >= 0 && i+j < map.length) {
+                    mainDiagonal = 0;
+                }
+                if (map.length - 1 - j + i >= 0 && map.length - 1 - j + i < map.length && map[j][map.length - 1 - j + i] == symbol) {
+                    sideDiagonal++;
+                } else if (map.length - 1 - j + i >= 0 && map.length - 1 - j + i < map.length) {
+                    sideDiagonal = 0;
+                }
+                if (mainDiagonal == DOTS_TO_WIN || sideDiagonal == DOTS_TO_WIN) {
+                    return true;
+                }
+            }
+        }
 
         for (int i = 0; i < map.length; i ++) {
-            if (map[i][i] == symbol) {
-                mainDiagonal++;
-            } else {
-                mainDiagonal = 0;
-            }
-            if (map[i][map.length - 1 - i] == symbol) {
-                sideDiagonal++;
-            } else {
-                sideDiagonal = 0;
-            }
 
             int horizontalLine = 0;
             int verticalLine = 0;
@@ -101,29 +110,12 @@ public class TicTacToe {
                 } else {
                     verticalLine = 0;
                 }
+                if (verticalLine == DOTS_TO_WIN || horizontalLine == DOTS_TO_WIN) {
+                    return true;
+                }
             }
-            if (verticalLine == DOTS_TO_WIN || horizontalLine == DOTS_TO_WIN ||
-                    mainDiagonal == DOTS_TO_WIN || sideDiagonal == DOTS_TO_WIN) {
-                return true;
-            }
-
         }
-
         return false;
-
-
-//        if (map[0][0] == symbol && map[0][1] == symbol && map[0][2] == symbol) return true;
-//        if (map[1][0] == symbol && map[1][1] == symbol && map[1][2] == symbol) return true;
-//        if (map[2][0] == symbol && map[2][1] == symbol && map[2][2] == symbol) return true;
-//
-//        if (map[0][0] == symbol && map[1][0] == symbol && map[2][0] == symbol) return true;
-//        if (map[0][1] == symbol && map[1][1] == symbol && map[2][1] == symbol) return true;
-//        if (map[0][2] == symbol && map[1][2] == symbol && map[2][2] == symbol) return true;
-//
-//        if (map[0][0] == symbol && map[1][1] == symbol && map[2][2] == symbol) return true;
-//        if (map[0][2] == symbol && map[1][1] == symbol && map[2][0] == symbol) return true;
-
-     //   return false;
     }
 
     private static void aiTurn() {
@@ -192,6 +184,4 @@ public class TicTacToe {
         }
         System.out.println();
     }
-
-
 }
