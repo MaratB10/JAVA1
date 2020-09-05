@@ -12,8 +12,8 @@ public class TicTacToe {
     private  static  final char DONT_X = 'X';
     private  static  final char DONT_O = 'O';
 
-    private static final int SIZE = 5; // размер поля
-    private static final int DOTS_TO_WIN = 4; // кол-во значений идущих подряд для победы
+    private static final int SIZE = 3; // размер поля
+    private static final int DOTS_TO_WIN = 3; // кол-во значений идущих подряд для победы
 
     private static final char[][] map = new char[SIZE][SIZE]; //Поле игры
     private static final Scanner scanner = new Scanner(System.in);
@@ -21,7 +21,8 @@ public class TicTacToe {
 
     public static void main(String[] args) {
 
-        prepareGame();
+        initMap(); // инициализация полей и заполнение их символами "пусто"
+        printMap(); // вывод поля в консоль
         playGame();
         System.out.println("Игра закончена!");
 
@@ -55,10 +56,6 @@ public class TicTacToe {
         }
     }
 
-    private static void prepareGame() {
-        initMap(); // инициализация
-        printMap(); // выводим наше поле
-    }
 
     private static boolean isMapFull() {
         for (char[] row : map) {
@@ -120,13 +117,52 @@ public class TicTacToe {
 
     private static void aiTurn() {
         int rowIndex, colIndex;
+
         do{
             rowIndex = random.nextInt(SIZE);
             colIndex = random.nextInt(SIZE);
         } while (!isCellValid(rowIndex,colIndex));
 
+
+
+        for (int i = 0; i < map.length; i++){
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == DONT_EMPTY) {
+
+                    map[i][j] = DONT_X;
+                    if (checkWin(DONT_X)) {
+                        map[i][j] = DONT_EMPTY;
+                        rowIndex = i;
+                        colIndex = j;
+                        break;
+                    } else {
+                        map[i][j] = DONT_EMPTY;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < map.length; i++){
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == DONT_EMPTY) {
+
+                    map[i][j] = DONT_O;
+                    if (checkWin(DONT_O)) {
+                        map[i][j] = DONT_EMPTY;
+                        rowIndex = i;
+                        colIndex = j;
+                        break;
+                    } else {
+                        map[i][j] = DONT_EMPTY;
+                    }
+                }
+            }
+        }
+
         map[rowIndex][colIndex] = DONT_O;
     }
+
+
 
     private static void humanTurn() {
         int rowIndex = -1, colIndex = -1;
