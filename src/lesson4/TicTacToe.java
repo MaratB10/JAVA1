@@ -21,7 +21,8 @@ public class TicTacToe {
 
     public static void main(String[] args) {
 
-        prepareGame();
+        initMap(); // инициализация полей и заполнение их символами "пусто"
+        printMap(); // вывод поля в консоль
         playGame();
         System.out.println("Игра закончена!");
 
@@ -55,10 +56,6 @@ public class TicTacToe {
         }
     }
 
-    private static void prepareGame() {
-        initMap(); // инициализация
-        printMap(); // выводим наше поле
-    }
 
     private static boolean isMapFull() {
         for (char[] row : map) {
@@ -72,29 +69,100 @@ public class TicTacToe {
     }
 
     private static boolean checkWin(char symbol) {
-        if (map[0][0] == symbol && map[0][1] == symbol && map[0][2] == symbol) return true;
-        if (map[1][0] == symbol && map[1][1] == symbol && map[1][2] == symbol) return true;
-        if (map[2][0] == symbol && map[2][1] == symbol && map[2][2] == symbol) return true;
 
-        if (map[0][0] == symbol && map[1][0] == symbol && map[2][0] == symbol) return true;
-        if (map[0][1] == symbol && map[1][1] == symbol && map[2][1] == symbol) return true;
-        if (map[0][2] == symbol && map[1][2] == symbol && map[2][2] == symbol) return true;
 
-        if (map[0][0] == symbol && map[1][1] == symbol && map[2][2] == symbol) return true;
-        if (map[0][2] == symbol && map[1][1] == symbol && map[2][0] == symbol) return true;
+        for (int i = -map.length/2; i<= map.length/2; i++){
+            int mainDiagonal = 0;
+            int sideDiagonal = 0;
 
+            for (int j = 0; j < map.length; j++) {
+                if (i+j >= 0 && i+j < map.length && map[j][j+i] == symbol) {
+                    mainDiagonal++;
+                } else if (i+j >= 0 && i+j < map.length) {
+                    mainDiagonal = 0;
+                }
+                if (map.length - 1 - j + i >= 0 && map.length - 1 - j + i < map.length && map[j][map.length - 1 - j + i] == symbol) {
+                    sideDiagonal++;
+                } else if (map.length - 1 - j + i >= 0 && map.length - 1 - j + i < map.length) {
+                    sideDiagonal = 0;
+                }
+                if (mainDiagonal == DOTS_TO_WIN || sideDiagonal == DOTS_TO_WIN) {
+                    return true;
+                }
+            }
+        }
+
+        for (int i = 0; i < map.length; i ++) {
+
+            int horizontalLine = 0;
+            int verticalLine = 0;
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == symbol) {
+                    horizontalLine++;
+                } else {
+                    horizontalLine = 0;
+                }
+                if (map[j][i] == symbol) {
+                    verticalLine++;
+                } else {
+                    verticalLine = 0;
+                }
+                if (verticalLine == DOTS_TO_WIN || horizontalLine == DOTS_TO_WIN) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
     private static void aiTurn() {
         int rowIndex, colIndex;
+
         do{
             rowIndex = random.nextInt(SIZE);
             colIndex = random.nextInt(SIZE);
         } while (!isCellValid(rowIndex,colIndex));
 
+
+
+        for (int i = 0; i < map.length; i++){
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == DONT_EMPTY) {
+
+                    map[i][j] = DONT_X;
+                    if (checkWin(DONT_X)) {
+                        map[i][j] = DONT_EMPTY;
+                        rowIndex = i;
+                        colIndex = j;
+                        break;
+                    } else {
+                        map[i][j] = DONT_EMPTY;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < map.length; i++){
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == DONT_EMPTY) {
+
+                    map[i][j] = DONT_O;
+                    if (checkWin(DONT_O)) {
+                        map[i][j] = DONT_EMPTY;
+                        rowIndex = i;
+                        colIndex = j;
+                        break;
+                    } else {
+                        map[i][j] = DONT_EMPTY;
+                    }
+                }
+            }
+        }
+
         map[rowIndex][colIndex] = DONT_O;
     }
+
+
 
     private static void humanTurn() {
         int rowIndex = -1, colIndex = -1;
@@ -152,6 +220,4 @@ public class TicTacToe {
         }
         System.out.println();
     }
-
-
 }
